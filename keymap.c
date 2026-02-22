@@ -31,19 +31,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //------------------------------------------------------------------------------       ----------------------------------------------------------------------------
       KC_Z,   KC_X,  KC_C,   KC_V,  KC_B,     							KC_N,   KC_M,   TD(DANCE_2),   TD(DANCE_1),   TD(DANCE_3),
   //---------------------------------------------------------------------------------------       ----------------------------------------------------------------------------------
-		    					OSM(MOD_RCTL),OSM(MOD_LSFT),      MT(MOD_MEH,KC_SPACE), TO(1)
+		    					OSM(MOD_RCTL),OSM(MOD_LSFT),      MT(MOD_MEH,KC_SPACE), MO(1)
   //---------------------------------------------------------------------------------------       ----------------------------------------------------------------------------------
   ),
 
   [1] = LAYOUT(  //Layer 2
   //---------------------------------------------------------------------------------------       ----------------------------------------------------------------------------------
-    KC_ESCAPE,KC_AT    ,LSFT(KC_3)     ,TD(DANCE_31)     ,KC_PERC    ,KC_CIRC    ,KC_AMPR   ,KC_ASTR   ,KC_SCLN   ,KC_BSPC ,
+    KC_ESCAPE,KC_AT    ,LSFT(KC_3)     ,TD(DANCE_31)     ,KC_PERC    ,KC_CIRC    ,KC_AMPR   ,QK_BOOT   ,KC_SCLN   ,KC_BSPC ,
   //----------------------------------------------------------------------------       ----------------------------------------------------------------------------------
     KC_TAB,KC_EQL    ,LALT(KC_RBRC)    ,LALT(LSFT(KC_RBRC))    ,TD(DANCE_32)    ,TD(BKSL_HME),LSFT(KC_LBRC),LSFT(KC_RBRC),TD(PIPE_END),KC_ENTER   ,
   //----------------------------------------------------------------------------       ----------------------------------------------------------------------------------
     KC_TILD, TD(DANCE_33)   ,LALT(KC_LBRC)   ,LALT(LSFT(KC_LBRC))   ,KC_DQUO   ,KC_LBRC     ,KC_LPRN   ,KC_RPRN   ,KC_RBRC   ,TO(3)   ,
   //---------------------------------------------------------------------------------------       ----------------------------------------------------------------------------------
-		    					TO(0) ,OSM(MOD_LSFT),        KC_RALT, TO(2)
+		    					TO(2) ,OSM(MOD_LSFT),        KC_RALT, TO(2)
   ),
 
   [2] = LAYOUT(  //Layer 4
@@ -54,7 +54,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //---------------------------------------------------------------------------------------       ----------------------------------------------------------------------------------
     QK_BOOT,   KC_KP_ASTERISK, KC_BRIGHTNESS_DOWN,KC_BRIGHTNESS_UP,KC_DOT,   KC_0,   KC_1, KC_2, KC_3,   TO(3),
   //---------------------------------------------------------------------------------------       ----------------------------------------------------------------------------------
-	  TO(0), KC_LGUI,              KC_RALT ,TO(2)
+	  TO(0), KC_LGUI,              KC_RALT ,TO(1)
   ),
 
   [3] = LAYOUT(  //Layer 3
@@ -68,9 +68,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   )
 };
 
-
-
-
+/* Ctrl+M on layer 0: enter bootloader */
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (get_highest_layer(layer_state) == 0 && keycode == KC_M && record->event.pressed &&
+        (get_mods() & MOD_MASK_CTRL)) {
+        tap_code16(QK_BOOT);
+        return false;
+    }
+    return true;
+}
 
 extern bool g_suspend_state;
 #define GET_TAP_KC(dual_role_key) dual_role_key & 0xFF
